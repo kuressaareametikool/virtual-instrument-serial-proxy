@@ -5,7 +5,7 @@
 Download Python from https://www.python.org/downloads/
 
 ## Python installation
-
+Run downloaded installer.
 🛑 Make sure to activate **add to PATH** on the first screen of installer
 
 ## Python modules
