@@ -6,12 +6,21 @@ URL = "http://localhost:8000"
 
 sio = socketio.Client()
 
-# arduino = Serial(port='/dev/ttyACM0', baudrate=9600, timeout=.1)
-serial_port = Serial(port=serial_port_name, baudrate=9600, timeout=.1)
+serial_port = Serial(port=serial_port_name, baudrate=9600, timeout=2)
 
 @sio.event
 def connect():
     print('connection established')
+
+@sio.on('send-data')
+def on_message(data):
+    print(data)
+    if 'python' in data:
+        if data['python'] == 'on':
+            serial_port.write(b'5')
+        elif  data['python'] == 'off':
+            serial_port.write(b'6')
+        # print(serial_port.readline())
 
 @sio.event
 def disconnect():
@@ -20,11 +29,14 @@ def disconnect():
 sio.connect(URL)
 
 while True:
-    key, value = serial_port.readline().decode('utf-8').strip().split()
+    value = serial_port.readline().decode('utf-8').strip()
     
     if value:
-        print('Key:', key, 'Value:', value)
-        sio.emit('send-data', {'key': key, 'value': value})
+        print('Value:', value)
+        sio.emit('send-data', {'sample': value})
+
+
+    
   
 
 
